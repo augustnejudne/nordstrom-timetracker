@@ -1,0 +1,33 @@
+<div class="container">
+  <img src="../../../assets/images/logo.png" alt="nordstrom log">
+  <h1 class="mat-headline">Login</h1>
+  <form
+    #f="ngForm"
+    (ngSubmit)="onSubmit(f)"
+    >
+    <mat-form-field>
+      <mat-select
+        placeholder="Select Name"
+        ngModel
+        name="name"
+        required
+        >
+        <mat-option *ngFor="let e of employees" [value]="e.name">
+          {{ e.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Enter 4-digit PIN"
+        type="password"
+        maxlength="4"
+        ngModel
+        name="password"
+        required
+        >
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Login</button>
+  </form>
+</div>

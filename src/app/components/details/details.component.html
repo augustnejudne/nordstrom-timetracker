@@ -1,0 +1,48 @@
+<h2 class="mat-h2">Hi, {{ staffName }}! What will you be working on today?</h2>
+
+<form #f="ngForm" (ngSubmit)="onSubmit(f)">
+  <mat-card>
+    <mat-card-subtitle>Work type</mat-card-subtitle>
+    <mat-form-field>
+      <mat-select placeholder="Select work type" [(ngModel)]="defaultWorkType" name="worktype" required>
+        <mat-option *ngFor="let w of worktypes" [value]="w">{{ w }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+  <mat-card *ngIf="f.value.worktype">
+    <mat-card-subtitle>Select a job</mat-card-subtitle>
+    <mat-form-field>
+      <mat-select placeholder="Select a job" ngModel name="job" required>
+        <mat-option *ngFor="let j of jobs" [value]="j">{{ j.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+  <mat-card *ngIf="f.value.job">
+    <mat-card-subtitle>Change order?</mat-card-subtitle>
+    <mat-radio-group [(ngModel)]="defaultCO" name="co" required>
+      <mat-radio-button value="Yes">Yes</mat-radio-button>
+      <mat-radio-button value="No">No</mat-radio-button>
+    </mat-radio-group>
+  </mat-card>
+  <mat-card *ngIf="f.value.co">
+    <mat-card-subtitle>Select a task</mat-card-subtitle>
+    <mat-form-field>
+      <mat-select placeholder="Select a task" ngModel name="task" required>
+        <mat-option *ngFor="let t of tasks" [value]="t">{{ t.value }}</mat-option>
+        <mat-option value="customTask">Custom Task</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field *ngIf="f.value.task === 'customTask'">
+      <input
+        matInput
+        placeholder="Enter Custom Task"
+        type="text"
+        ngModel
+        name="customTask"
+        required
+        >
+    </mat-form-field>
+  </mat-card>
+  <button mat-raised-button color="primary" type="submit" [disabled]="f.invalid">Submit</button>
+</form>
