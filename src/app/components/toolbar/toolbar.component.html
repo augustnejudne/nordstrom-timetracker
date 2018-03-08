@@ -1,0 +1,12 @@
+<mat-toolbar color="primary" id="toolbar">
+  <span class="mat-h3">
+    Nordstrom Time-Tracker App
+  </span>
+  <button
+    mat-button
+    (click)="logout()"
+    [disabled]="clockedIn"
+    >
+    Logout
+  </button>
+</mat-toolbar>

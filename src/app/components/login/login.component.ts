@@ -8,7 +8,9 @@ import {
 import {
   DatabaseService
 } from '../../services/database.service';
-import { SelectedEmployeeService } from '../../services/selected-employee.service';
+import {
+  SelectedEmployeeService
+} from '../../services/selected-employee.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +21,8 @@ export class LoginComponent implements OnInit {
   employees: any[];
   selectedEmployee;
 
+  wrongPassword = false;
+
   constructor(
     private _databaseService: DatabaseService,
     private _selectedEmployeeService: SelectedEmployeeService,
@@ -26,9 +30,11 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._databaseService.employeesRef$.subscribe(res => {
+    console.log('LOGIN COMPONENT INIT');
+
+
+    this._databaseService.employees$.subscribe(res => {
       this.employees = res.sort(this.compare);
-      console.log(this.employees);
     });
   }
 
@@ -46,13 +52,16 @@ export class LoginComponent implements OnInit {
     this.selectedEmployee = this.employees.find(e => {
       return f.value.name === e.name;
     });
-    if (f.value.password) {
-      if (f.value.password === this.selectedEmployee.password) {
-        this._selectedEmployeeService.details.staffId = this.selectedEmployee.key;
-        this._selectedEmployeeService.details.staffName = this.selectedEmployee.name;
-        this._router.navigate(['/details']);
-      }
+    if (f.value.password === this.selectedEmployee.password) {
+      this._selectedEmployeeService.details.staffId = this.selectedEmployee.key;
+      this._selectedEmployeeService.details.staffName = this.selectedEmployee.name;
+      this._databaseService.setCurrentEmployeeDB(this.selectedEmployee.key);
+      this._router.navigate(['/details']);
+    } else {
+      this.wrongPassword = true;
+    }
+    if (!localStorage.getItem('userData')) {
+      localStorage.setItem('userData', JSON.stringify(this._selectedEmployeeService.details));
     }
   }
-
 }

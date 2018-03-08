@@ -22,6 +22,7 @@ import { SelectedEmployeeService } from './services/selected-employee.service';
 
 // ROUTER
 import { RouterModule, Routes } from '@angular/router';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 const appRoutes: Routes = [
   { path: '', component: ActionComponent },
@@ -34,7 +35,8 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     ActionComponent,
-    DetailsComponent
+    DetailsComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,

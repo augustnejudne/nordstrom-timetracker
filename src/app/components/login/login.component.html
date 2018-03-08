@@ -26,8 +26,10 @@
         ngModel
         name="password"
         required
+        [disabled]="!f.value.name"
         >
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Login</button>
+    <div class="mat-caption" style="color: red; margin: -20px 0 0 0" *ngIf="wrongPassword">Wrong Password</div>
+    <button mat-raised-button color="primary" type="submit" style="margin-top: 10px;">Login</button>
   </form>
 </div>

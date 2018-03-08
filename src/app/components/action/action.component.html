@@ -1,3 +1,49 @@
-<p>
-  action works!
-</p>
+<app-toolbar></app-toolbar>
+
+<div class="container">
+  <h2 class="mat-h2">Welcome, {{ currentEmployeeDetails.staffName }}!</h2>
+  <table>
+    <tr>
+      <td class="mat-h4 align-right">
+        Work type:
+      </td>
+      <td class="mat-h4">
+        {{ currentEmployeeDetails.worktype }}
+      </td>
+    </tr>
+    <tr>
+      <td class="mat-h4 align-right">
+        Job:
+      </td>
+      <td class="mat-h4">
+        {{ currentEmployeeDetails.job }}
+      </td>
+    </tr>
+    <tr>
+      <td class="mat-h4 align-right">
+        Change order:
+      </td>
+      <td class="mat-h4">
+        {{ currentEmployeeDetails.co }}
+      </td>
+    </tr>
+    <tr>
+      <td class="mat-h4 align-right">
+        Task:
+      </td>
+      <td class="mat-h4">
+        {{ currentEmployeeDetails.task }}
+      </td>
+    </tr>
+  </table>
+  <button mat-raised-button color="accent" id="change-task" [routerLink]="['/details']" [disabled]="clockedIn">Change Task</button>
+  <button mat-fab id="actionButton" color="{{ !clockedIn ? 'primary' : 'warn' }}" (click)="toggleAction()">
+    <img src="../../../assets/images/ic_alarm_white_24px.svg" alt="">
+    <p id="actionText">{{ !clockedIn ? 'Clock In' : 'Clock Out' }}</p>
+  </button>
+  <mat-card style="max-width: 80%;">
+    <mat-card-subtitle>
+      {{ (!clockedIn) ? 'You are not clocked in. Please click the clock-in button to clock in.' : 'You are clocked in. Click the clock-out button to clock out.'}}
+    </mat-card-subtitle>
+  </mat-card>
+</div>

@@ -1,6 +1,7 @@
 import {
   Injectable
 } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 
 interface Details {
   staffId?: string;
@@ -40,6 +41,14 @@ export class SelectedEmployeeService {
     }
   };
 
-  constructor() {}
+  clockedIn = new Subject<boolean>();
+
+  constructor() {
+    console.log('SELECTED EMPLOYEES SERVICE CONSTRUCTED');
+    if (localStorage.getItem('userData')) {
+      this.details = JSON.parse(localStorage.getItem('userData'));
+    }
+    console.log(this.details);
+  }
 
 }

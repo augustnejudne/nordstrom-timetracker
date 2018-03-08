@@ -1,6 +1,8 @@
-<h2 class="mat-h2">Hi, {{ staffName }}! What will you be working on today?</h2>
+<app-toolbar></app-toolbar>
+
 
 <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+  <h2 style="max-width: 80%; text-align: center;" class="mat-h2">Hi, {{ staffName }}! What will you be working on today?</h2>
   <mat-card>
     <mat-card-subtitle>Work type</mat-card-subtitle>
     <mat-form-field>

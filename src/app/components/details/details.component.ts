@@ -1,6 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from '../../services/database.service';
-import { SelectedEmployeeService } from '../../services/selected-employee.service';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  Router
+} from '@angular/router';
+import {
+  DatabaseService
+} from '../../services/database.service';
+import {
+  SelectedEmployeeService
+} from '../../services/selected-employee.service';
 
 @Component({
   selector: 'app-details',
@@ -14,6 +24,7 @@ export class DetailsComponent implements OnInit {
   defaultWorkType = 'Field';
 
   jobs;
+  storedJob;
 
   defaultCO = 'No';
 
@@ -21,17 +32,38 @@ export class DetailsComponent implements OnInit {
 
   constructor(
     private _databaseService: DatabaseService,
-    private _selectedEmployeeService: SelectedEmployeeService
-  ) { }
+    private _selectedEmployeeService: SelectedEmployeeService,
+    private _router: Router
+  ) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this._selectedEmployeeService.details.location.latitude = position.coords.latitude;
+      this._selectedEmployeeService.details.location.longitude = position.coords.longitude;
+    });
+
+    // this.pre = JSON.parse(localStorage.getItem('userData'));
+    // console.log(this.pre);
+  }
 
   ngOnInit() {
+    console.log('DETAILS COMPONENT INIT');
+
+    if (!localStorage.getItem('userData')) {
+      this._router.navigate(['/login']);
+    } else {
+      this.storedJob = {
+        key: this._selectedEmployeeService.details.jobId,
+        value: this._selectedEmployeeService.details.job
+      };
+    }
+
+
     this.staffName = this._selectedEmployeeService.details.staffName;
 
-    this._databaseService.jobsRef$.subscribe(res => {
+    this._databaseService.jobs$.subscribe(res => {
       this.jobs = res.sort(this.compare);
     });
 
-    this._databaseService.tasksRef$.subscribe(res => {
+    this._databaseService.tasks$.subscribe(res => {
       this.tasks = res.sort(this.compare);
     });
   }
@@ -47,11 +79,10 @@ export class DetailsComponent implements OnInit {
   }
 
   log(x) {
-    console.log(x);
   }
 
   onSubmit(f) {
-    console.log(f);
+    // this._selectedEmployeeService.details.location.latitude;
     this._selectedEmployeeService.details.worktype = f.value.worktype;
     this._selectedEmployeeService.details.job = f.value.job.value;
     this._selectedEmployeeService.details.jobId = f.value.job.key;
@@ -63,7 +94,7 @@ export class DetailsComponent implements OnInit {
       this._selectedEmployeeService.details.task = f.value.task.value;
       this._selectedEmployeeService.details.taskId = f.value.task.key;
     }
-    console.log(this._selectedEmployeeService.details);
+    localStorage.setItem('userData', JSON.stringify(this._selectedEmployeeService.details));
+    this._router.navigate(['/']);
   }
-
 }
