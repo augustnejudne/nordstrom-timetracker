@@ -26,7 +26,6 @@ export class DatabaseService {
     private _afDb: AngularFireDatabase,
     private _selectedEmployeeService: SelectedEmployeeService
   ) {
-    console.log('DATABASE SERVICE CONSTRUCTED');
     this.employeesRef$ = this._afDb.list('employees');
     this.employees$ = this.employeesRef$.snapshotChanges()
       .map(actions => {

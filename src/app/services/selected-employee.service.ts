@@ -44,11 +44,9 @@ export class SelectedEmployeeService {
   clockedIn = new Subject<boolean>();
 
   constructor() {
-    console.log('SELECTED EMPLOYEES SERVICE CONSTRUCTED');
     if (localStorage.getItem('userData')) {
       this.details = JSON.parse(localStorage.getItem('userData'));
     }
-    console.log(this.details);
   }
 
 }

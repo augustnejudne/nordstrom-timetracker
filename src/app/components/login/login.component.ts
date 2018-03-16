@@ -30,9 +30,6 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('LOGIN COMPONENT INIT');
-
-
     this._databaseService.employees$.subscribe(res => {
       this.employees = res.sort(this.compare);
     });

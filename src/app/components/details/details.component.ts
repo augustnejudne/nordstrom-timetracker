@@ -45,8 +45,6 @@ export class DetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('DETAILS COMPONENT INIT');
-
     if (!localStorage.getItem('userData')) {
       this._router.navigate(['/login']);
     } else {

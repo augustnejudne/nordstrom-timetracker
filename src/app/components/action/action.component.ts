@@ -48,7 +48,13 @@ export class ActionComponent implements OnInit {
       this._router.navigate(['/login']);
     }
 
-    console.log('ACTION COMPONENT INIT');
+    try {
+      if (!this.currentEmployeeDetails.task) {
+        this._router.navigate(['/details']);
+      }
+    } catch (error) {
+      this._router.navigate(['/details']);
+    }
 
     if (this._selectedEmployeesService.details.staffName) {
       this._databaseService.currentEmployee$.subscribe(res => {
@@ -57,18 +63,6 @@ export class ActionComponent implements OnInit {
     }
 
     this.currentEmployeeDetails = this._selectedEmployeesService.details;
-
-    try {
-      if (this.currentEmployeeDb.clockedIn) {
-        if (this.currentEmployeeDb.clockedIn === true ) {
-          this.clockedIn = true;
-        } else {
-          this.clockedIn = false;
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   setClockInTime() {
