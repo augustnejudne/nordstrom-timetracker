@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
       this._selectedEmployeeService.details.staffId = this.selectedEmployee.key;
       this._selectedEmployeeService.details.staffName = this.selectedEmployee.name;
       this._databaseService.setCurrentEmployeeDB(this.selectedEmployee.key);
-      this._router.navigate(['/details']);
+      this._router.navigate(['/']);
     } else {
       this.wrongPassword = true;
     }

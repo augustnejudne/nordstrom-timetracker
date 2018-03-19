@@ -49,11 +49,6 @@ export class DetailsComponent implements OnInit {
     // } else {
 
     // }
-    this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/templog`).valueChanges().subscribe(res => {
-      if (res) {
-        this._router.navigate(['/']);
-      }
-    });
 
 
     this.staffName = this._selectedEmployeeService.details.staffName;

@@ -60,6 +60,12 @@ export class SelectedEmployeeService {
       this.clockedInSub.next(JSON.parse(localStorage.getItem('clockedIn')));
     }
 
+    this._afDb.object(`/employees/${this.details.staffId}/templog`).valueChanges().subscribe(res => {
+      if (res) {
+        this._router.navigate(['/']);
+      }
+    });
+
     if (!this.details.staffName) {
       this._router.navigate(['/login']);
     }

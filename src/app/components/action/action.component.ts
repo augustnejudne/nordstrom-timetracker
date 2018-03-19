@@ -143,7 +143,7 @@ export class ActionComponent implements OnInit {
       this._selectedEmployeeService.details.clockOutTime = this.setClockOutTime();
       this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/status`).set('CLOCKED OUT');
       this._afDb.list(`/worklog/${this._selectedEmployeeService.details.job}/${this._selectedEmployeeService.details.staffName}/`).push(this._selectedEmployeeService.details);
-      this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/templog`).remove();
+      // this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/templog`).remove();
       // this._afDb.list(`/worklog/${this._selectedEmployeesService.details.job}/${this._selectedEmployeesService.details.staffName}`)
       //   .push(this._selectedEmployeesService.details);
     }
