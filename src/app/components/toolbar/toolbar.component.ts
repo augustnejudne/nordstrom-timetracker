@@ -13,10 +13,13 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private _router: Router,
     private _selectedEmployeeService: SelectedEmployeeService
-  ) { }
+  ) {
+   }
 
   ngOnInit() {
-    this._selectedEmployeeService.clockedIn.subscribe(res => this.clockedIn = res);
+    this._selectedEmployeeService.clockedIn().subscribe( (res) => {
+      this.clockedIn = res;
+    });
   }
 
   logout() {

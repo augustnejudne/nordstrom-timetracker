@@ -11,6 +11,7 @@ import {
 import {
   SelectedEmployeeService
 } from '../../services/selected-employee.service';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 @Component({
   selector: 'app-details',
@@ -18,19 +19,17 @@ import {
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit {
-  staffName;
-
-  worktypes = ['Field', 'Shop', 'Delivery', 'PM'];
-  defaultWorkType = 'Field';
-
-  jobs;
-  storedJob;
-
   defaultCO = 'No';
-
+  defaultWorkType = 'Field';
+  jobs;
+  loaded = false;
+  storedJob;
+  staffName;
   tasks;
+  worktypes = ['Field', 'Shop', 'Delivery', 'PM'];
 
   constructor(
+    private _afDb: AngularFireDatabase,
     private _databaseService: DatabaseService,
     private _selectedEmployeeService: SelectedEmployeeService,
     private _router: Router
@@ -45,20 +44,23 @@ export class DetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!localStorage.getItem('userData')) {
-      this._router.navigate(['/login']);
-    } else {
-      this.storedJob = {
-        key: this._selectedEmployeeService.details.jobId,
-        value: this._selectedEmployeeService.details.job
-      };
-    }
+    // if (!localStorage.getItem('userData')) {
+    //   this._router.navigate(['/login']);
+    // } else {
+
+    // }
+    this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/templog`).valueChanges().subscribe(res => {
+      if (res) {
+        this._router.navigate(['/']);
+      }
+    });
 
 
     this.staffName = this._selectedEmployeeService.details.staffName;
 
     this._databaseService.jobs$.subscribe(res => {
       this.jobs = res.sort(this.compare);
+      this.loaded = true;
     });
 
     this._databaseService.tasks$.subscribe(res => {

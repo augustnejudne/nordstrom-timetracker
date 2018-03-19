@@ -24,7 +24,7 @@ import {
 export class ActionComponent implements OnInit {
   currentEmployeeDb;
   currentEmployeeDetails;
-  clockedIn: boolean;
+  clockedIn = false;
 
   /* ============================
   ======== DATE and TIME =======
@@ -40,29 +40,61 @@ export class ActionComponent implements OnInit {
     private _afDb: AngularFireDatabase,
     private _router: Router,
     private _databaseService: DatabaseService,
-    private _selectedEmployeesService: SelectedEmployeeService
+    private _selectedEmployeeService: SelectedEmployeeService,
   ) {}
 
   ngOnInit() {
+    this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/templog`).valueChanges().subscribe(res => {
+      if (res) {
+        // console.log(res);
+        this._selectedEmployeeService.details = res;
+      }
+    });
+    this.currentEmployeeDetails = this._selectedEmployeeService.details;
+
+    this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/status`).valueChanges().subscribe(res => {
+      if (res) {
+        // this._selectedEmployeesService.clockInOut(true);
+        // console.log(res);
+        if (res === 'CLOCKED IN') {
+          // console.log('res is CLOCKED IN');
+          this._selectedEmployeeService.clockInOut(true);
+        } else {
+          // console.log('res is CLOCKED OUT');
+          this._selectedEmployeeService.clockInOut(false);
+        }
+      } else {
+        this._selectedEmployeeService.clockInOut(false);
+        // console.log('status DOES NOT EXIST');
+      }
+    });
+
+    this._selectedEmployeeService.clockedIn().subscribe(res => this.clockedIn = res);
+
+    // if (localStorage.getItem('clockedIn')) {
+    //   this.clockedIn = JSON.parse(localStorage.getItem('clockedIn'));
+    // }
+
     if (!localStorage.getItem('userData')) {
       this._router.navigate(['/login']);
     }
 
     try {
       if (!this.currentEmployeeDetails.task) {
+        // console.log('no task');
         this._router.navigate(['/details']);
       }
     } catch (error) {
+      // console.log(error);
       this._router.navigate(['/details']);
     }
 
-    if (this._selectedEmployeesService.details.staffName) {
+    if (this._selectedEmployeeService.details.staffName) {
       this._databaseService.currentEmployee$.subscribe(res => {
         this.currentEmployeeDb = res;
       });
     }
 
-    this.currentEmployeeDetails = this._selectedEmployeesService.details;
   }
 
   setClockInTime() {
@@ -102,16 +134,21 @@ export class ActionComponent implements OnInit {
 
   toggleAction() {
     if (!this.clockedIn) {
-      this._selectedEmployeesService.clockedIn.next(true);
-      this._selectedEmployeesService.details.date = this.displayDate;
-      this._selectedEmployeesService.details.clockInTime = this.setClockInTime();
-      localStorage.setItem('userData', JSON.stringify(this._selectedEmployeesService.details));
+      this._selectedEmployeeService.details.date = this.displayDate;
+      this._selectedEmployeeService.details.clockInTime = this.setClockInTime();
+      localStorage.setItem('userData', JSON.stringify(this._selectedEmployeeService.details));
+      this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/status`).set('CLOCKED IN');
+      this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/templog`).set(this.currentEmployeeDetails);
     } else {
-      this._selectedEmployeesService.clockedIn.next(false);
-      this._selectedEmployeesService.details.clockOutTime = this.setClockOutTime();
+      this._selectedEmployeeService.details.clockOutTime = this.setClockOutTime();
+      this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/status`).set('CLOCKED OUT');
+      this._afDb.list(`/worklog/${this._selectedEmployeeService.details.job}/${this._selectedEmployeeService.details.staffName}/`).push(this._selectedEmployeeService.details);
+      this._afDb.object(`/employees/${this._selectedEmployeeService.details.staffId}/templog`).remove();
       // this._afDb.list(`/worklog/${this._selectedEmployeesService.details.job}/${this._selectedEmployeesService.details.staffName}`)
       //   .push(this._selectedEmployeesService.details);
     }
   this.clockedIn = !this.clockedIn;
+  this._selectedEmployeeService.clockInOut(this.clockedIn);
+  localStorage.setItem('clockedIn', JSON.stringify(this.clockedIn));
   }
 }

@@ -1,7 +1,10 @@
 <app-toolbar></app-toolbar>
 
+<div class="spinner-container" *ngIf="!loaded">
+  <mat-spinner></mat-spinner>
+</div>
 
-<form #f="ngForm" (ngSubmit)="onSubmit(f)">
+<form #f="ngForm" (ngSubmit)="onSubmit(f)" *ngIf="loaded">
   <h2 style="max-width: 80%; text-align: center;" class="mat-h2">Hi, {{ staffName }}! What will you be working on today?</h2>
   <mat-card>
     <mat-card-subtitle>Work type</mat-card-subtitle>
@@ -20,7 +23,7 @@
     </mat-form-field>
   </mat-card>
   <mat-card *ngIf="f.value.job">
-    <mat-card-subtitle>Change order?</mat-card-subtitle>
+    <mat-card-subtitle>Change Order T&M</mat-card-subtitle>
     <mat-radio-group [(ngModel)]="defaultCO" name="co" required>
       <mat-radio-button value="Yes">Yes</mat-radio-button>
       <mat-radio-button value="No">No</mat-radio-button>

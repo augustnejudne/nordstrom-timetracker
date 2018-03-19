@@ -5,6 +5,13 @@
   align-items: center;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 img {
   max-width: 300px;
   background: #ddd;
@@ -14,9 +21,8 @@ img {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.spinner-container {
   align-items: center;
+  display: flex;
+  justify-content: center;
 }

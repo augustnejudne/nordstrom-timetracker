@@ -19,8 +19,8 @@ import {
 })
 export class LoginComponent implements OnInit {
   employees: any[];
+  loaded = false;
   selectedEmployee;
-
   wrongPassword = false;
 
   constructor(
@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this._databaseService.employees$.subscribe(res => {
       this.employees = res.sort(this.compare);
+      this.loaded = true;
     });
   }
 

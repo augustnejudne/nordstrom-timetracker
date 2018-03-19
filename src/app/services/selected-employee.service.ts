@@ -1,7 +1,9 @@
 import {
   Injectable
 } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { Router } from '@angular/router';
 
 interface Details {
   staffId?: string;
@@ -21,8 +23,10 @@ interface Details {
   clockOutTime?: string;
 }
 
+
 @Injectable()
 export class SelectedEmployeeService {
+
   details: Details = {
     staffId: '',
     staffName: '',
@@ -41,12 +45,32 @@ export class SelectedEmployeeService {
     }
   };
 
-  clockedIn = new Subject<boolean>();
+  clockedInSub = new BehaviorSubject<boolean>(false);
 
-  constructor() {
+  checkDBStatus;
+
+  constructor(
+    private _afDb: AngularFireDatabase,
+    private _router: Router
+  ) {
     if (localStorage.getItem('userData')) {
       this.details = JSON.parse(localStorage.getItem('userData'));
     }
+    if (localStorage.getItem('clockedIn')) {
+      this.clockedInSub.next(JSON.parse(localStorage.getItem('clockedIn')));
+    }
+
+    if (!this.details.staffName) {
+      this._router.navigate(['/login']);
+    }
+  }
+
+  clockedIn() {
+    return this.clockedInSub.asObservable();
+  }
+
+  clockInOut(state) {
+    this.clockedInSub.next(state);
   }
 
 }
